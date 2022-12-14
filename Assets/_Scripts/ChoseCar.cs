@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -20,9 +21,10 @@ public class ChoseCar : MonoBehaviour
     [SerializeField] private GameObject _scroolBarContent;
 
     [SerializeField] private DataCars _carChose;
+    private int _indexCarSelected;
 
-    [SerializeField] private Button teest;
-
+    [SerializeField] private GameObject _socle;
+    private GameObject _carSpawned;
     // Start is called before the first frame update
     void Start()
     {
@@ -35,40 +37,80 @@ public class ChoseCar : MonoBehaviour
         
     }
 
+#if UNITY_EDITOR
     public void InitScroolBarContent ()
     {
         for(int i = 0; i < _carEnable.Count; i++) 
         {
             CreatButton(_carEnable[i],i);
         }
+
+        ChangeCarSelected(0);
     }
 
     private void CreatButton (DataCars carData,int i)
     {
+        //Cree un objet avec le component Button
         GameObject buttonToPut = new GameObject(carData.Name, typeof(Button));
         buttonToPut.transform.parent = _scroolBarContent.transform;
 
         buttonToPut.AddComponent<Image>();
 
         buttonToPut.GetComponent<Image>().sprite = carData.ImageCar;
-        //buttonToPut.GetComponent<Button>().onClick.
-        MethodInfo targetInfo = UnityEvent.GetValidMethodInfo(buttonToPut.GetComponent<Button>().onClick, "tst", new System.Type[0]);
-        Debug.Log(targetInfo);
-        UnityAction methodDelegate = System.Delegate.CreateDelegate(typeof(UnityAction), buttonToPut.GetComponent<Button>(), targetInfo) as UnityAction;
-        UnityEventTools.AddPersistentListener(buttonToPut.GetComponent<Button>().onClick, methodDelegate);
+        Button button = buttonToPut.GetComponent<Button>();
+
+        //Ligne de code qui permet de recup une ethode dans un script
+        //MethodInfo targetInfo = UnityEvent.GetValidMethodInfo(this, "tst", new System.Type[0]);
+        //Debug.Log(targetInfo);
+
+        //Permet de mettre une event en EditMode a un bouton
+        ChoseCar script = this;
+        //Cree un unity event
+        UnityAction<int> action2 = new UnityAction<int>(ChangeCarSelected);
+        //Ajouter l event au bouton
+        UnityEventTools.AddIntPersistentListener(button.onClick, action2,i);
 
         
-    }
+        GameObject imageBackGround = new GameObject("BackGroudButton", typeof(Image));
+        imageBackGround.transform.parent = buttonToPut.transform;
+        imageBackGround.GetComponent<RectTransform>().localPosition = Vector3.zero;
+        imageBackGround.GetComponent<RectTransform>().sizeDelta = new Vector2(200,200);
 
-    public void tst (int i)
-    {
-        Debug.Log("aaaa");
+        GameObject imageCar = new GameObject("ImageCar", typeof(Image));
+        imageCar.transform.parent = buttonToPut.transform;
+        imageCar.GetComponent<Image>().sprite = carData.ImageCar;
+        imageCar.GetComponent<RectTransform>().localPosition = Vector3.zero;
+        imageCar.GetComponent<RectTransform>().sizeDelta = new Vector2(200, 200);
     }
-
+#endif
     public void ChangeCarSelected (int i)
     {
+        ResetCarSelected(_indexCarSelected);
+        _indexCarSelected = i;
         _carChose = _carEnable[i];
+        _scroolBarContent.transform.GetChild(i).GetChild(0).GetComponent<Image>().color = Color.green;
+
+        _carSpawned = Instantiate(_carChose.CarPrefab, Vector3.zero, Quaternion.identity);
+        _carSpawned.transform.parent = _socle.transform;
     }
+
+    private void ResetCarSelected (int i)
+    {
+        _scroolBarContent.transform.GetChild(i).GetChild(0).GetComponent<Image>().color = Color.white;
+        if(_carSpawned == null)
+        {
+            if(_socle.transform.childCount != 0)
+            {
+                Destroy(_socle.transform.GetChild(0).gameObject);
+            }
+        }
+        else
+        {
+            Destroy(_carSpawned);
+        }
+    }
+
+
 }
 
 #if UNITY_EDITOR
@@ -107,6 +149,7 @@ public class EditorChoseCar : Editor
         {
             ((ChoseCar)target).InitScroolBarContent();
         }
+
         base.OnInspectorGUI();
     }
 }

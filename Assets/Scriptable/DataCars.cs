@@ -6,7 +6,10 @@ public class DataCars : ScriptableObject
 {
     [SerializeField] private string _name;
     public string Name { get { return _name; } }
+
     [SerializeField] private GameObject _carPrefab;
+    public GameObject CarPrefab { get { return _carPrefab; } }
+
     [SerializeField] private Sprite _imageCar;
     public Sprite ImageCar { get { return _imageCar; } }
 

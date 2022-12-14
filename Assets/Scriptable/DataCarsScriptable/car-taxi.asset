@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f1479eec44523594e82ca866163dc297, type: 3}
-  m_Name: car-baywatch
+  m_Name: car-taxi
   m_EditorClassIdentifier: 
-  _name: car-baywatch
-  _carPrefab: {fileID: 1000012089129496, guid: b4cadd9efac9a724ebe3e9c39ba38a7a, type: 3}
-  _imageCar: {fileID: 21300000, guid: 120cd4df5e2044b40b3a7ea5219da80a, type: 3}
+  _name: car-taxi
+  _carPrefab: {fileID: 1908895531624282, guid: 22cac3ac4ce0640f2bae173eb93d9781, type: 3}
+  _imageCar: {fileID: 21300000, guid: 9b6d6ff0778722240b1b4710f01c82fb, type: 3}

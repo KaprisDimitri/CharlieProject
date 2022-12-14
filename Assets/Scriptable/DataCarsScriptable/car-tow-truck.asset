@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f1479eec44523594e82ca866163dc297, type: 3}
-  m_Name: car-baywatch
+  m_Name: car-tow-truck
   m_EditorClassIdentifier: 
-  _name: car-baywatch
-  _carPrefab: {fileID: 1000012089129496, guid: b4cadd9efac9a724ebe3e9c39ba38a7a, type: 3}
-  _imageCar: {fileID: 21300000, guid: 120cd4df5e2044b40b3a7ea5219da80a, type: 3}
+  _name: car-tow-truck
+  _carPrefab: {fileID: 1926647446645284436, guid: ca8fe652b4c284a4bbd48f9d55e8202f, type: 3}
+  _imageCar: {fileID: 21300000, guid: ad7d8a7c1ee2ad54e9f62b64351f65a1, type: 3}
