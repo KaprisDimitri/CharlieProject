@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using UnityEditor;
+#if UNITY_EDITOR
 using UnityEditor.Events;
+#endif
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -20,6 +22,7 @@ public class ChoseCar : MonoBehaviour
 
     [SerializeField] private GameObject _scroolBarContent;
 
+    [SerializeField] private BridgeBetweenScenes _bridgeBetweenScenes;
     [SerializeField] private DataCars _carChose;
     private int _indexCarSelected;
 
@@ -28,7 +31,8 @@ public class ChoseCar : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       // teest.onClick.AddListener(tst);
+        // teest.onClick.AddListener(tst);
+        _bridgeBetweenScenes.CarChose = _carChose;
     }
 
     // Update is called once per frame
@@ -40,6 +44,16 @@ public class ChoseCar : MonoBehaviour
 #if UNITY_EDITOR
     public void InitScroolBarContent ()
     {
+
+        int numberOfChild = _scroolBarContent.transform.childCount;
+        
+        for (int i = 0; i< numberOfChild; i++)
+        {
+            
+            DestroyImmediate(_scroolBarContent.transform.GetChild(0).gameObject);
+            
+        }
+
         for(int i = 0; i < _carEnable.Count; i++) 
         {
             CreatButton(_carEnable[i],i);
@@ -88,6 +102,7 @@ public class ChoseCar : MonoBehaviour
         ResetCarSelected(_indexCarSelected);
         _indexCarSelected = i;
         _carChose = _carEnable[i];
+        _bridgeBetweenScenes.CarChose = _carChose;
         _scroolBarContent.transform.GetChild(i).GetChild(0).GetComponent<Image>().color = Color.green;
 
         _carSpawned = Instantiate(_carChose.CarPrefab, Vector3.zero, Quaternion.identity);
@@ -101,12 +116,12 @@ public class ChoseCar : MonoBehaviour
         {
             if(_socle.transform.childCount != 0)
             {
-                Destroy(_socle.transform.GetChild(0).gameObject);
+                DestroyImmediate(_socle.transform.GetChild(0).gameObject);
             }
         }
         else
         {
-            Destroy(_carSpawned);
+            DestroyImmediate(_carSpawned);
         }
     }
 
@@ -125,10 +140,11 @@ public class EditorChoseCar : Editor
     {
         if (GUILayout.Button("Check And Add DataCars"))
         {
-            int count = Directory.GetFiles(@"C:\Users\Dim\CharlieProject\Assets\Scriptable\DataCarsScriptable\").Length;
+            //D:\UnityDosser\UnityProjet\CharlieProject
+            int count = Directory.GetFiles(@"D:\UnityDosser\UnityProjet\CharlieProject\Assets\Scriptable\DataCarsScriptable\").Length;
             if (count != 0)
             {
-                var filesDataCar = Directory.GetFiles(@"C:\Users\Dim\CharlieProject\Assets\Scriptable\DataCarsScriptable\");
+                var filesDataCar = Directory.GetFiles(@"D:\UnityDosser\UnityProjet\CharlieProject\Assets\Scriptable\DataCarsScriptable\");
                 List<DataCars> _carEnable = new List<DataCars>();
                 for (int i = 0; i < count; i++)
                 {
